@@ -13,7 +13,7 @@ const REWARD_WALLET_SECRET = [
   199, 77, 81, 197, 188, 92, 74, 158,
   166, 92, 190, 111, 189, 84, 190, 187,
   238, 92, 94, 87, 35, 86, 92, 221,
-  112, 84
+  112, 84, 157, 198, 45, 67, 89, 201
 ];
 const TOKEN_MINT = new PublicKey("59eXaVJNG441QW54NTmpeDpXEzkuaRjSLm8M6N4Gpump");
 const DECIMALS = 4;
