@@ -1,4 +1,3 @@
-// src/app/api/webhook/route.ts   ← 直接全替换！
 import { supabase } from "@/lib/supabase";
 import { NextRequest } from "next/server";
 
@@ -23,7 +22,6 @@ export async function POST(req: NextRequest) {
         const buyer = t.toUserAccount || t.toOwner;
         if (!buyer) continue;
 
-        // 查买家有没有上级
         const { data: buyerData } = await supabase
           .from("users")
           .select("referrer")
@@ -34,7 +32,6 @@ export async function POST(req: NextRequest) {
 
         const reward = realAmount * REWARD_RATE;
 
-        // 终极傻瓜写法：先读当前值，再写回去（没有任何类型坑）
         const { data: current } = await supabase
           .from("users")
           .select("pending_reward")
