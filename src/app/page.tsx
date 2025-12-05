@@ -10,11 +10,10 @@ export default function Home() {
   const [inviter, setInviter] = useState<string | null>(null);
   const [myRefs, setMyRefs] = useState(0);
   const hasCheckedRef = useRef(false);
-  const bindRef = useRef(false); // 防重复绑定
+  const bindRef = useRef(false);
   const [pendingReward, setPendingReward] = useState(0);
   const [claiming, setClaiming] = useState(false);
 
-  // 读取 ?ref= （只执行一次）
   useEffect(() => {
     if (hasCheckedRef.current) return;
     hasCheckedRef.current = true;
@@ -22,11 +21,10 @@ export default function Home() {
     const url = new URL(window.location.href);
     const ref = url.searchParams.get("ref");
     if (ref && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(ref)) {
-      setInviter(ref); // 这行在 effect 外层，但用 ref 防重复，已安全
+      setInviter(ref);
     }
   }, []);
 
-  // 自动签名绑定（用 useCallback 包裹）
   const bindReferral = useCallback(async () => {
     if (!publicKey || !inviter || !signMessage || bindRef.current) return;
     bindRef.current = true;
@@ -51,7 +49,7 @@ export default function Home() {
       alert("邀请关系绑定成功！");
     } catch (err) {
       console.log("用户取消或出错", err);
-      bindRef.current = false; // 出错重置
+      bindRef.current = false;
     }
   }, [publicKey, inviter, signMessage]);
 
@@ -59,9 +57,8 @@ export default function Home() {
     if (connected) {
       bindReferral();
     }
-  }, [connected, bindReferral]); // 依赖 bindReferral，避免循环
+  }, [connected, bindReferral]);
 
-  // 统计邀请人数（异步，不直接 setState）
   useEffect(() => {
     if (!publicKey) {
       setMyRefs(0);
@@ -77,7 +74,6 @@ export default function Home() {
     loadRefs();
   }, [publicKey]);
 
-  // 加载返现数量
 useEffect(() => {
   if (!publicKey) return;
   supabase
@@ -88,7 +84,6 @@ useEffect(() => {
     .then(({ data }) => setPendingReward(data?.pending_reward || 0));
 }, [publicKey]);
 
-// 一键领取函数
 const claimReward = async () => {
   setClaiming(true);
   const res = await fetch("/api/claim", {
