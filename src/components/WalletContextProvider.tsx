@@ -3,7 +3,17 @@
 
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets"; // 只用 Phantom 和 Solflare，先稳住
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  BackpackWalletAdapter,
+  NightlyWalletAdapter,
+  TrustWalletAdapter,
+  LedgerWalletAdapter,
+  MathWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+import { OKXWalletAdapter } from "@okxwallet/solana-provider";
+import { TokenPocketAdapter } from "@tokenpocket/solana-provider";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { clusterApiUrl } from "@solana/web3.js";
 import { useMemo } from "react";
@@ -13,14 +23,23 @@ export default function WalletContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const network = WalletAdapterNetwork.Devnet;
+  const network = WalletAdapterNetwork.Mainnet;
 
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter(),  // 先只用 Phantom 测试
+      new OKXWalletAdapter(),
+      new TokenPocketAdapter(),
+      
+      new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
+      new BackpackWalletAdapter(),
+      new NightlyWalletAdapter(),
+      
+      new TrustWalletAdapter(),
+      new MathWalletAdapter(),
+      new LedgerWalletAdapter(),
     ],
     []
   );
